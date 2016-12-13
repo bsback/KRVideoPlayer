@@ -9,7 +9,7 @@
 #import "KRVideoPlayerController.h"
 #import "KRVideoPlayerControlView.h"
 
-static const CGFloat kVideoPlayerControllerAnimationTimeInterval = 0.3f;
+static const CGFloat kVideoPlayerControllerAnimationTimeinterval = 0.3f;
 
 @interface KRVideoPlayerController ()
 
@@ -52,7 +52,7 @@ static const CGFloat kVideoPlayerControllerAnimationTimeInterval = 0.3f;
     [self play];
 }
 
-#pragma mark - Public Method
+#pragma mark - Publick Method
 
 - (void)showInWindow
 {
@@ -62,19 +62,20 @@ static const CGFloat kVideoPlayerControllerAnimationTimeInterval = 0.3f;
     }
     [keyWindow addSubview:self.view];
     self.view.alpha = 0.0;
-    [UIView animateWithDuration:kVideoPlayerControllerAnimationTimeInterval animations:^{
+    [UIView animateWithDuration:kVideoPlayerControllerAnimationTimeinterval animations:^{
         self.view.alpha = 1.0;
     } completion:^(BOOL finished) {
         
     }];
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+//    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 }
 
 - (void)dismiss
 {
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+    
     [self stopDurationTimer];
-    [self stop];
-    [UIView animateWithDuration:kVideoPlayerControllerAnimationTimeInterval animations:^{
+    [UIView animateWithDuration:kVideoPlayerControllerAnimationTimeinterval animations:^{
         self.view.alpha = 0.0;
     } completion:^(BOOL finished) {
         [self.view removeFromSuperview];
@@ -174,6 +175,8 @@ static const CGFloat kVideoPlayerControllerAnimationTimeInterval = 0.3f;
     if (self.isFullscreenMode) {
         return;
     }
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+    
     self.originFrame = self.view.frame;
     CGFloat height = [[UIScreen mainScreen] bounds].size.width;
     CGFloat width = [[UIScreen mainScreen] bounds].size.height;
@@ -193,6 +196,9 @@ static const CGFloat kVideoPlayerControllerAnimationTimeInterval = 0.3f;
     if (!self.isFullscreenMode) {
         return;
     }
+    
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+    
     [UIView animateWithDuration:0.3f animations:^{
         [self.view setTransform:CGAffineTransformIdentity];
         self.frame = self.originFrame;
@@ -206,7 +212,7 @@ static const CGFloat kVideoPlayerControllerAnimationTimeInterval = 0.3f;
 - (void)setProgressSliderMaxMinValues {
     CGFloat duration = self.duration;
     self.videoControl.progressSlider.minimumValue = 0.f;
-    self.videoControl.progressSlider.maximumValue = floor(duration);
+    self.videoControl.progressSlider.maximumValue = duration;
 }
 
 - (void)progressSliderTouchBegan:(UISlider *)slider {
@@ -248,7 +254,7 @@ static const CGFloat kVideoPlayerControllerAnimationTimeInterval = 0.3f;
 
 - (void)startDurationTimer
 {
-    self.durationTimer = [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(monitorVideoPlayback) userInfo:nil repeats:YES];
+    self.durationTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(monitorVideoPlayback) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.durationTimer forMode:NSDefaultRunLoopMode];
 }
 
